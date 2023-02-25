@@ -27,7 +27,7 @@ class EquationPropagator():
 
         self._q0 = q0
 
-    def propagate(self, dt, T):
+    def propagate(self, dt, T, t0=0):
 
         ts, qs = self._propagator.propagate(
             self._eq_funcs,
@@ -45,11 +45,11 @@ class _PropagatorFirstOrder():
 
         pass
 
-    def propagate(self, func, q0, dt, T):
+    def propagate(self, func, q0, dt, T, t0=0):
 
         N = int(T/dt)
 
-        ts = [0]
+        ts = [t0]
         qs = [q0]
 
         for _ in range(N):
@@ -72,14 +72,14 @@ class _PropagatorSecondOrder():
 
         pass
     
-    def propagate(self, funcs, q0, dt, T):
+    def propagate(self, funcs, q0, dt, T, t0=0):
 
         f1 = funcs[0]
         f2 = funcs[1]
 
         N = int(T/dt)
 
-        ts = [0]
+        ts = [t0]
         q1s = [q0[0]]
         q2s = [q0[1]]
 
@@ -104,7 +104,7 @@ class _PropagatorSecondOrder():
             q2s.append(q2s[-1] + dq2)
             ts.append(ts[-1] + dt)
 
-        return ts, [q1s, q2s]
+        return np.array(ts), np.array([q1s, q2s])
 
 
 if __name__ == '__main__':
